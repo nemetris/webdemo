@@ -11,7 +11,7 @@ It shows you some simple features like..
 ## Installation Instructions
 
 * install git
-* clone this repository
+* clone this repository `git clone https://github.com/nemetris/webdemo.git`
 * install a python interpreter (python 3.9 or higher)
 * install cherrypy webserver via pip `pip install cherrypy`
 
