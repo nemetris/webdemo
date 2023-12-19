@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Demo</title>
+    <!-- ----------------------------------------------------------------------------------- -->
+    <!-- CSS for this html page                                                              -->
+    <!-- ----------------------------------------------------------------------------------- -->
+    <link rel="stylesheet" href="/w2ui.css"                 type="text/css" />
+    <!-- ----------------------------------------------------------------------------------- -->
+    <!-- javaScript for this html page                                                       -->
+    <!-- ----------------------------------------------------------------------------------- -->
+    <script type="text/javascript" src="/jquery.js" ></script>
+    <script type="text/javascript" src="/w2ui.js"></script>
+</head>
+<body>
+<h1>Dies ist ein Demo-Grid mit Datenbankanbindung</h1>
+<div id="grid" style="width: 80%; height: 350px;"></div>
+
+<script type="text/javascript">
+$( function() {
+    $( '#grid' ).w2grid( {
+        name : 'grid',
+        show : {
+            header        : true,
+            toolbar       : true,
+            toolbarAdd    : true,
+            toolbarDelete : true,
+            toolbarSave   : true,
+            toolbarEdit   : true,
+            footer        : true,
+            lineNumbers   : true,
+            selectColumn  : true,
+            expandColumn  : false,
+        },
+        url : {
+            get    : '/get_table_data',
+            remove : '/delete_table_data',
+            save   : '/save_table_data',
+        },
+        postData : {
+            table_name : 'test',
+        },
+        searches : [
+            { field : 'fname', caption : 'First Name', type : 'text' },
+            { field : 'lname', caption : 'Last Name', type : 'text' },
+            { field : 'email', caption : 'Email', type : 'text' },
+        ],
+        sortData : [{ field : 'lname', direction : 'asc' }],
+        columns  : [
+            // { field: 'recid', text: 'ID', size: '50px', sortable: true },
+            { field : 'fname', text : 'First Name', size : '30%', sortable : true },
+            { field : 'lname', text : 'Last Name', size : '30%', sortable : true },
+            { field : 'email', text : 'Email', size : '40%' },
+        ],
+        onEdit : function( event ) {
+            w2alert( 'edit' );
+        },
+    } );
+} );
+</script>
+
+</body>
+</html>

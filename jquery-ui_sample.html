@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+   <head>
+        <title>jquery UI Demo</title>
+        <!-- ----------------------------------------------------------------------------------- -->
+        <!-- CSS for this html page                                                              -->
+        <!-- ----------------------------------------------------------------------------------- -->
+        <link rel="stylesheet" href="/jquery-ui.css"                 type="text/css" />
+        <!-- ----------------------------------------------------------------------------------- -->
+        <!-- javaScript for this html page                                                       -->
+        <!-- ----------------------------------------------------------------------------------- -->
+        <script type="text/javascript" src="/jquery.js" ></script>
+        <script type="text/javascript" src="/jquery-ui.js"></script>
+        <script>
+            //--------------------------------------------------------------------------------------
+            // Stuff to do when the document is ready ...
+            //--------------------------------------------------------------------------------------
+            $( document ).ready( function() {
+                $( "#button-1, #button-2, #button-3" ).button();
+                $( "#button-4" ).buttonset();
+            } );
+         </script>
+   </head>
+   <body>
+      <button id = "button-1">A button element</button>
+      <input id = "button-2" type = "submit" value = "A submit button">
+      <a id = "button-3" href = "">An anchor</a>
+      <br><br>
+      <div id = "button-4">
+         <input type = "checkbox" id = "check1">
+         <label for = "check1">Left</label>
+         <input type = "checkbox" id = "check2">
+         <label for = "check2">Middle</label>
+         <input type = "checkbox" id = "check3">
+         <label for = "check3">Right</label>
+      </div>
+   </body>
+</html>

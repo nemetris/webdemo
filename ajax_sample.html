@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+    <head>
+        <title>AJAX Demo</title>
+        <!-- ----------------------------------------------------------------------------------- -->
+        <!-- CSS for this html page                                                              -->
+        <!-- ----------------------------------------------------------------------------------- -->
+        <link rel="stylesheet" href="/jquery-ui.css" type="text/css" />
+        <!-- ----------------------------------------------------------------------------------- -->
+        <!-- javaScript for this html page                                                       -->
+        <!-- ----------------------------------------------------------------------------------- -->
+        <script type="text/javascript" src="/jquery.js" ></script>
+        <script type="text/javascript" src="/jquery-ui.js"></script>
+        <script>
+            //--------------------------------------------------------------------------------------
+            // Stuff to do when the document is ready ...
+            //--------------------------------------------------------------------------------------
+            $( document ).ready( function() {
+                // tell the button that it is an jquery UI button
+                $( "#button-1" ).button();
+
+                // action if button was clicked ...
+                $( "#button-1" ).click( function() {
+                    var string_to_reverse = $( '#input_string_reverse' ).val();
+                    console.log( "string_to_reverse --> ", string_to_reverse );
+
+                    $.ajax( {
+                        url  : '/string_reverse',
+                        type : 'GET',
+                        data : {
+                            string_to_reverse : string_to_reverse,
+                        },
+                        dataType : 'json',
+                        success  : function( data ) {
+                            console.log( data );
+                            $( "#result" ).text( data.result );
+                            if ( data.status === "good" ) {
+                                $( "#result" ).css( "color", "black" );
+                            }
+                            else {
+                                $( "#result" ).css( "color", "red" );
+                            }
+                        },
+                        error : function( jqXHR, status, errorThrown ) {
+                            console.log( "ups, a critical error happened!" );
+                            console.log( jqXHR );
+                            console.log( status );
+                            console.log( errorThrown );
+                        },
+                    } );
+                } );
+
+                // if user used ENTER in the input ...
+                $( "#input_string_reverse" ).on( 'keyup', function( e ) {
+                    if ( e.keyCode === 13 ) {
+                        $( "#button-1" ).click();
+                    }
+                } );
+            } );
+        </script>
+        <style>
+            * {
+                font-family: sans-serif;
+            }
+            #input_string_reverse{
+                padding: 8px 8px;
+                width: 90%;
+                font-weight: bold;
+            }
+            #layout{
+                width: 40%;
+            }
+            #button-1{
+                width: 60%
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>Bitte einen String eingeben:</h2>
+        <table id="layout">
+            <td><input type="text" name="input_string_reverse" id="input_string_reverse" class="ui-widget ui-widget-content ui-corner-all"></td>
+            <td><button id = "button-1">An Server senden</button><br></td>
+        </table>
+
+        <h3><div id="result">&nbsp;</div></h3>
+    </body>
+</html>
