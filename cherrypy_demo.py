@@ -350,17 +350,6 @@ class HelloWorld(object):
 
 
     @cherrypy.expose
-    def save_table_data( self, **kwargs ):
-        print("*** save_table_data ***")
-
-        for arg, value in kwargs.items():
-            print( "*****************************************************************************" )
-            print( "Parameter: {0}, Value:{1}".format(arg, value) )
-            print( "*****************************************************************************" )
-
-        return dict( status="success" )
-
-    @cherrypy.expose
     def string_reverse( self, string_to_reverse ):
         print( "*****************************************************************************" )
         print( "*** string_reverse ***" )
