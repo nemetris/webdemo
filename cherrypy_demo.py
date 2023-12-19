@@ -169,6 +169,155 @@ class HelloWorld(object):
             return  json.dumps( result )
 
     @cherrypy.expose
+    def get_table_data_all( self, **kwargs ):
+        '''
+        Data selection function for our grid.
+
+        This function is called from the w2ui.grid in an ajax call. See http://w2ui.com/web/docs/grid
+        for more details.
+        '''
+        #===========================================================================================
+        # log all parameters
+        #===========================================================================================
+        for arg, value in kwargs.items():
+            print( "Parameter: {0}, Value:{1}".format(arg, value) )
+        kwargs = json.loads(kwargs["request"])
+        #===========================================================================================
+        # get the table name
+        #===========================================================================================
+        table_name = kwargs.get( 'table_name' )
+
+        with sqlite3.connect(DB_STRING) as conn:
+            curs = conn.cursor()
+            #===========================================================================================
+            # check if we do have some search filters --> WHERE clause for our select statement
+            #===========================================================================================
+            i = 0
+            where_clause = ""
+            for search in  kwargs.get( 'search', '' ):
+                current_field    = search.get( 'field' )
+                current_operator = search.get( 'operator' )
+                current_value    = search.get( "value" )
+                search_logic     = kwargs.get( 'searchLogic' )
+                print( "Search operation: field( {0} ) - operator ( {1} ) - search logic ( {2} )".format( current_field, current_operator, search_logic ) )
+                #=======================================================================================
+                # get type of field ...
+                # we need this so that we can create a correct SQL statement
+                #=======================================================================================
+                curs.execute( 'SELECT typeof({0}) FROM {1} LIMIT 1'.format( current_field, table_name ) )
+                data = curs.fetchone()
+                field_type = data[0].upper()
+                print( "Search operation: field type( {0} ) ".format( field_type ) )
+                #=======================================================================================
+                # kind of operation depending on the field type...
+                #=======================================================================================
+                #=======================================================================================
+                # text field operations ....
+                #=======================================================================================
+                if( field_type in ("TEXT", "BLOB") ):
+                    #===================================================================================
+                    # =
+                    #===================================================================================
+                    if( current_operator == "is" ):
+                        sql_operation = " {0} = '{1}'".format( current_field, current_value )
+                    #===================================================================================
+                    # like abc%
+                    #===================================================================================
+                    elif( current_operator == "begins" ):
+                        sql_operation = " {0} like '{1}%'".format( current_field, current_value )
+                    #===================================================================================
+                    # like %abc%
+                    #===================================================================================
+                    elif( current_operator == "contains" ):
+                        sql_operation = " {0} like '%{1}%'".format( current_field, current_value )
+                    #===================================================================================
+                    # like %abc
+                    #===================================================================================
+                    elif( current_operator == "ends" ):
+                        sql_operation = " {0} like '%{1}'".format( current_field, current_value )
+                    #===================================================================================
+                    # error
+                    #===================================================================================
+                    else:
+                        message = "Fatal Error: Unknown search operator: {0} (TEXT, BLOB)".format( current_operator )
+                        logger.critical( message )
+                        result = {
+                                    "status"  : "error",
+                                    "message" : message
+                                }
+                        return  json.dumps(result)
+                #=======================================================================================
+                # numbers ...
+                #=======================================================================================
+                elif( field_type in ("INTEGER", "FLOAT", "REAL") ):
+                    break
+                    # not implemented yet
+
+                #=======================================================================================
+                # build where clause ...
+                #=======================================================================================
+                if( i == 0 ):
+                    where_clause = ( "where " + sql_operation )
+                else:
+                    where_clause = ( where_clause + ' ' + search_logic + sql_operation )
+                i += 1
+            #===========================================================================================
+            # check if we do have a sorting in the request --> ORDER BY for our select statement
+            #===========================================================================================
+            i = 0
+            order_by = ""
+
+            # not implemented yet
+
+            #===========================================================================================
+            # get the maximum of possible rows
+            #===========================================================================================
+            print("TTTTTTTTTTTTTTTTTTTTTTTTT")
+            print( "select count(*) from {0} {1} {2}".format( table_name, where_clause, order_by ) )
+            print("TTTTTTTTTTTTTTTTTTTTTTTTT")
+            curs.execute( "select count(*) from {0} {1} {2}".format( table_name,
+                                                                    where_clause,
+                                                                    order_by ) )
+            data = curs.fetchone()
+            total_rows = data[0]
+            #===========================================================================================
+            # get the requested results ...
+            #===========================================================================================
+            curs.execute( "select rowid, {0}.* from {0} {1} {2} limit {3} offset {4}".format( table_name,
+                                                                                            where_clause,
+                                                                                            order_by,
+                                                                                            kwargs.get('limit'),
+                                                                                            kwargs.get('offset') ) )
+            #===========================================================================================
+            # get all fields from the select ...
+            #===========================================================================================
+            columns = [column[0] for column in curs.description]
+            data = curs.fetchall()
+            records = []
+            for i, row in enumerate(data):
+                #=======================================================================================
+                # we need here an ordered dict so that we keep the column order of our selection ...
+                # note that a dict is not ordered and the the result would be random ..
+                #=======================================================================================
+                record = collections.OrderedDict( zip(columns, row) )
+                #=======================================================================================
+                # we need to add the record ID for the w2ui grid to the result
+                # ... we use here the sqlite rowid as an unique identifier since this will help us
+                # with all other operations like delete or update a record ...
+                #=======================================================================================
+                record["recid"] = row[0] #rowid
+                records.append(record)
+            #===========================================================================================
+            # build the final w2ui grid structure
+            #===========================================================================================
+            result = {
+                        "status": "success",
+                        "total": total_rows,
+                        "records": records
+                    }
+            return  json.dumps( result )
+
+    @cherrypy.expose
     def delete_table_data( self, **kwargs ):
         print("*** delete_table_data ***")
         #===========================================================================================
@@ -200,6 +349,16 @@ class HelloWorld(object):
         return  json.dumps( result )
 
 
+    @cherrypy.expose
+    def save_table_data( self, **kwargs ):
+        print("*** save_table_data ***")
+
+        for arg, value in kwargs.items():
+            print( "*****************************************************************************" )
+            print( "Parameter: {0}, Value:{1}".format(arg, value) )
+            print( "*****************************************************************************" )
+
+        return dict( status="success" )
 
     @cherrypy.expose
     def string_reverse( self, string_to_reverse ):
