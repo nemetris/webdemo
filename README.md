@@ -10,6 +10,7 @@ It shows you some simple features like..
 
 ## Installation Instructions
 
+* install git
 * clone this repository
 * install a python interpreter (python 3.9 or higher)
 * install cherrypy webserver via pip `pip install cherrypy`
@@ -22,6 +23,7 @@ Open your browser and go the URL `http://localhost:4444` and inspect the applica
 
 ## Links
 
+* [git download](https://git-scm.com/downloads)
 * [Python download](https://www.python.org/downloads/release/python-3120/)
 * [pip docs](https://pip.pypa.io/en/stable/)
 * [cherrypy docs](https://docs.cherrypy.dev/en/latest/)
