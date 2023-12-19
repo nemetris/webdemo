@@ -25,6 +25,8 @@ Open your browser and go the URL `http://localhost:4444` and inspect the applica
 * [Python download](https://www.python.org/downloads/release/python-3120/)
 * [pip docs](https://pip.pypa.io/en/stable/)
 * [cherrypy docs](https://docs.cherrypy.dev/en/latest/)
+* [cherrypy tutorial](https://docs.cherrypy.dev/en/latest/tutorials.html)
+* [cherrypy tutorial - database](https://docs.cherrypy.dev/en/latest/tutorials.html#tutorial-9-data-is-all-my-life)
 * [jquery docs](https://api.jquery.com/)
 * [w2ui docs](https://w2ui.com/web/docs/1.5/grid)
 * [VS Code download](https://code.visualstudio.com/download)
