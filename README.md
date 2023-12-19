@@ -20,9 +20,18 @@ It shows you some simple features like..
 Execute `start_demo.bat` to bring up the cherrypy webserver.
 Open your browser and go the URL `http://localhost:4444` and inspect the application.
 
+## Query Database
+
+On startup a small sqlite3 database is going to be created. To inspect what's inside the database,
+you can use the tool `DBeaver`. Simply download and run the application and follow the steps
+described here `https://github.com/dbeaver/dbeaver/wiki/Create-Connection`.
+
+![DBeaver SQLite Connection Setup](static/dbeaver-sqlite-conn.png)
+
 
 ## Links
 
+* [dbeaver download](https://dbeaver.io/download/)
 * [git download](https://git-scm.com/downloads)
 * [Python download](https://www.python.org/downloads/release/python-3120/)
 * [pip docs](https://pip.pypa.io/en/stable/)
